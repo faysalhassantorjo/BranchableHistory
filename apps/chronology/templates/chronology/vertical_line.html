@@ -1,0 +1,1699 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Branchable — Timeline</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --gold: #e8b84b;
+            --gold-dim: rgba(232, 184, 75, 0.1);
+            --gold-glow: rgba(232, 184, 75, 0.22);
+            --gold-muted: rgba(232, 184, 75, 0.5);
+            --s0: #070707;
+            --s1: #0d0d0d;
+            --s2: #131313;
+            --s3: #1a1a1a;
+            --s4: #222;
+            --b0: #1c1c1c;
+            --b1: #282828;
+            --b2: #363636;
+            --tp: #edeae4;
+            --ts: #7e7b73;
+            --tm: #484542;
+            --green: #4db87e;
+            --blue: #5c90ef;
+            --red: #e05c5c;
+            --r: 11px;
+            --rs: 6px;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--s0);
+            color: var(--tp);
+            font-size: 0.9rem;
+            line-height: 1.65;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* ─── NAV ─── */
+        .app-nav {
+            position: sticky;
+            top: 0;
+            z-index: 200;
+            background: rgba(7, 7, 7, 0.93);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border-bottom: 1px solid var(--b0);
+            height: 52px;
+            display: flex;
+            align-items: center;
+            padding: 0 1rem;
+        }
+
+        .nav-inner {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .brand {
+            font-family: 'Fraunces', serif;
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: var(--gold);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .nav-chip {
+            background: var(--s3);
+            border: 1px solid var(--b0);
+            border-radius: 20px;
+            padding: 0.18rem 0.65rem;
+            font-size: 0.68rem;
+            color: var(--ts);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 180px;
+        }
+
+        .nav-actions {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .btn-g {
+            background: transparent;
+            border: 1px solid var(--b1);
+            color: var(--ts);
+            border-radius: var(--rs);
+            padding: 0.28rem 0.7rem;
+            font-size: 0.73rem;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.28rem;
+            transition: all 0.15s;
+            white-space: nowrap;
+        }
+
+        .btn-g:hover {
+            border-color: var(--b2);
+            color: var(--tp);
+        }
+
+        .btn-gold-s {
+            background: var(--gold);
+            border: 1px solid var(--gold);
+            color: #000;
+            border-radius: var(--rs);
+            padding: 0.28rem 0.75rem;
+            font-size: 0.73rem;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.28rem;
+            transition: background 0.15s;
+            white-space: nowrap;
+        }
+
+        .btn-gold-s:hover {
+            background: #efbf54;
+        }
+
+        @media (max-width: 540px) {
+            .nav-chip {
+                display: none;
+            }
+
+            .lbl {
+                display: none;
+            }
+
+            .btn-g,
+            .btn-gold-s {
+                padding: 0.28rem 0.45rem;
+            }
+        }
+
+        /* ─── HERO ─── */
+        .hero {
+            background: var(--s1);
+            border-bottom: 1px solid var(--b0);
+            padding: 1.4rem 1rem 1.2rem;
+        }
+
+        @media (min-width: 640px) {
+            .hero {
+                padding: 1.8rem 1.5rem 1.5rem;
+            }
+        }
+
+        @media (min-width: 900px) {
+            .hero {
+                padding: 2rem 2rem 1.6rem;
+            }
+        }
+
+        .bc-row {
+            font-size: 0.68rem;
+            color: var(--tm);
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            flex-wrap: wrap;
+            margin-bottom: 0.6rem;
+        }
+
+        .bc-row a {
+            color: var(--tm);
+        }
+
+        .bc-row a:hover {
+            color: var(--ts);
+        }
+
+        .bc-row i {
+            opacity: 0.5;
+            font-size: 0.6rem;
+        }
+
+        .bc-row .active {
+            color: var(--gold);
+        }
+
+        .hero-title {
+            font-family: 'Fraunces', serif;
+            font-size: clamp(1.2rem, 3.5vw, 1.65rem);
+            font-weight: 700;
+            color: var(--tp);
+            letter-spacing: -0.025em;
+            line-height: 1.2;
+            margin-bottom: 0.3rem;
+        }
+
+        .branch-pill {
+            display: inline-flex;
+            align-items: center;
+            background: var(--gold);
+            color: #000;
+            border-radius: 20px;
+            padding: 0.12rem 0.6rem;
+            font-size: 0.68rem;
+            font-weight: 700;
+            vertical-align: middle;
+            margin-left: 0.45rem;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .hero-desc {
+            color: var(--ts);
+            font-size: 0.82rem;
+            margin: 0;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 0.45rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+
+        .stat-chip {
+            background: var(--s2);
+            border: 1px solid var(--b0);
+            border-radius: var(--rs);
+            padding: 0.28rem 0.7rem;
+            font-size: 0.71rem;
+            color: var(--ts);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        /* ─── BRANCH BAR ─── */
+        .branch-bar {
+            background: var(--s0);
+            border-bottom: 1px solid var(--b0);
+            padding: 0.5rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+
+        .branch-bar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .bb-label {
+            font-size: 0.65rem;
+            color: var(--tm);
+            white-space: nowrap;
+            flex-shrink: 0;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .bb-tab {
+            background: transparent;
+            border: 1px solid var(--b1);
+            color: var(--ts);
+            border-radius: 20px;
+            padding: 0.2rem 0.75rem;
+            font-size: 0.71rem;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s;
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            flex-shrink: 0;
+        }
+
+        .bb-tab:hover {
+            border-color: var(--gold-muted);
+            color: var(--gold);
+        }
+
+        .bb-tab.active {
+            background: var(--gold);
+            border-color: var(--gold);
+            color: #000;
+            font-weight: 700;
+        }
+
+        .bb-tab i {
+            font-size: 6px;
+        }
+
+        /* ─── TIMELINE WRAPPER ─── */
+        .tl-outer {
+            max-width: 80%;
+            margin: 0 auto;
+            padding: 1.25rem 1rem;
+        }
+
+        @media (min-width: 640px) {
+            .tl-outer {
+                padding: 1.5rem;
+            }
+        }
+
+        @media (min-width: 900px) {
+            .tl-outer {
+                padding: 2rem;
+            }
+        }
+
+        /* search/filter */
+        .filter-row {
+            display: flex;
+            gap: 0.45rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.75rem;
+            align-items: stretch;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: var(--s2);
+            border: 1px solid var(--b1);
+            border-radius: var(--rs);
+            padding: 0 0.7rem;
+            gap: 0.45rem;
+            flex: 1;
+            min-width: 160px;
+        }
+
+        .search-box i {
+            color: var(--tm);
+            font-size: 0.78rem;
+        }
+
+        .search-input {
+            background: transparent;
+            border: none;
+            color: var(--tp);
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.82rem;
+            padding: 0.48rem 0;
+            width: 100%;
+            outline: none;
+        }
+
+        .search-input::placeholder {
+            color: var(--tm);
+        }
+
+        .f-select {
+            background: var(--s2);
+            border: 1px solid var(--b1);
+            color: var(--ts);
+            border-radius: var(--rs);
+            padding: 0.4rem 0.7rem;
+            font-size: 0.75rem;
+            font-family: 'Outfit', sans-serif;
+            cursor: pointer;
+        }
+
+        .f-select option {
+            background: var(--s2);
+        }
+
+        @media (max-width: 540px) {
+            .f-select {
+                display: none;
+            }
+        }
+
+        /* year/origin dividers */
+        .year-row {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .year-badge {
+            font-family: 'Fraunces', serif;
+            background: var(--gold);
+            color: #000;
+            border-radius: var(--rs);
+            padding: 0.18rem 0.75rem;
+            font-size: 0.85rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .year-line {
+            flex: 1;
+            height: 1px;
+            background: var(--b0);
+        }
+
+        .origin-row {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 1.4rem;
+        }
+
+        .origin-badge {
+            background: var(--gold);
+            color: #000;
+            border-radius: var(--rs);
+            padding: 0.22rem 0.85rem;
+            font-size: 0.78rem;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            flex-shrink: 0;
+        }
+
+        .origin-lbl {
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            color: var(--gold-muted);
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .origin-line {
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(to right, var(--gold-muted), transparent);
+        }
+
+        /* track */
+        .tl-track {
+            border-left: 1px solid var(--b1);
+            padding-left: 1.4rem;
+            margin-left: 0.6rem;
+            position: relative;
+        }
+
+        @media (min-width: 640px) {
+            .tl-track {
+                padding-left: 1.8rem;
+                margin-left: 0.85rem;
+            }
+        }
+
+        .dot {
+            position: absolute;
+            left: -6px;
+            top: 1.2rem;
+            width: 11px;
+            height: 11px;
+            border-radius: 50%;
+            background: var(--gold);
+            border: 2px solid var(--s0);
+        }
+
+        .dot-genesis {
+            position: absolute;
+            left: -9px;
+            top: 1.35rem;
+            width: 17px;
+            height: 17px;
+            border-radius: 50%;
+            background: var(--gold);
+            border: 3px solid var(--s0);
+            box-shadow: 0 0 0 4px var(--gold-dim), 0 0 20px var(--gold-glow);
+        }
+
+        /* tags */
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.2rem;
+            border-radius: 4px;
+            padding: 0.16rem 0.48rem;
+            font-size: 0.68rem;
+            font-weight: 600;
+            line-height: 1.4;
+            white-space: nowrap;
+        }
+
+        .tag i {
+            font-size: 0.62rem;
+        }
+
+        .tg {
+            background: var(--gold);
+            color: #000;
+        }
+
+        .tc {
+            background: rgba(224, 92, 92, 0.12);
+            color: #e88888;
+            border: 1px solid rgba(224, 92, 92, 0.18);
+        }
+
+        .tk {
+            background: rgba(76, 184, 126, 0.1);
+            color: var(--green);
+            border: 1px solid rgba(76, 184, 126, 0.18);
+        }
+
+        .td {
+            background: var(--s3);
+            color: var(--ts);
+            border: 1px solid var(--b1);
+        }
+
+        .ta {
+            background: rgba(76, 184, 126, 0.1);
+            color: var(--green);
+            border: 1px solid rgba(76, 184, 126, 0.18);
+        }
+
+        /* event cards */
+        .ev-card {
+            background: var(--s1);
+            border: 1px solid var(--b0);
+            border-radius: var(--r);
+            margin-bottom: 0.85rem;
+            overflow: hidden;
+            cursor: pointer;
+            transition: border-color 0.18s, transform 0.18s, box-shadow 0.18s;
+            animation: fu 0.3s ease both;
+        }
+
+        .ev-card:hover {
+            border-color: var(--b2);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 38px rgba(0, 0, 0, 0.42);
+        }
+
+        .ev-body {
+            padding: 0.95rem 1.05rem 0.8rem;
+        }
+
+        .ev-footer {
+            padding: 0.55rem 1.05rem;
+            border-top: 1px solid var(--b0);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .ev-title {
+            font-family: 'Fraunces', serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--gold);
+            margin-bottom: 0.28rem;
+            line-height: 1.3;
+        }
+
+        .ev-sum {
+            font-size: 0.81rem;
+            color: var(--ts);
+            margin-bottom: 0.6rem;
+            line-height: 1.6;
+        }
+
+        /* genesis card */
+        .gc {
+            background: linear-gradient(135deg, #110f00 0%, #0c0c0c 55%, #070e07 100%);
+            border: 1px solid rgba(232, 184, 75, 0.2);
+            border-radius: var(--r);
+            margin-bottom: 0.85rem;
+            cursor: pointer;
+            overflow: hidden;
+            position: relative;
+            transition: border-color 0.18s, transform 0.18s, box-shadow 0.18s;
+            animation: fu 0.3s ease both;
+        }
+
+        .gc::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 15% 15%, rgba(232, 184, 75, 0.065) 0%, transparent 65%);
+            pointer-events: none;
+        }
+
+        .gc:hover {
+            border-color: rgba(232, 184, 75, 0.42);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 48px rgba(232, 184, 75, 0.07), 0 4px 14px rgba(0, 0, 0, 0.5);
+        }
+
+        .gc-body {
+            padding: 1.05rem 1.2rem 0.85rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .gc-footer {
+            padding: 0.6rem 1.2rem;
+            border-top: 1px solid rgba(232, 184, 75, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            background: rgba(232, 184, 75, 0.025);
+            position: relative;
+            z-index: 1;
+        }
+
+        .gc-title {
+            font-family: 'Fraunces', serif;
+            font-size: clamp(1rem, 2.8vw, 1.22rem);
+            font-weight: 700;
+            color: var(--gold);
+            letter-spacing: -0.02em;
+            margin-bottom: 0.4rem;
+            line-height: 1.25;
+        }
+
+        /* branch alert */
+        .ba {
+            background: rgba(92, 144, 239, 0.05);
+            border: 1px solid rgba(92, 144, 239, 0.16);
+            border-radius: var(--rs);
+            padding: 0.55rem 0.85rem;
+            margin-bottom: 0.85rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.6rem;
+            font-size: 0.77rem;
+        }
+
+        .ba>i {
+            color: var(--blue);
+            font-size: 0.95rem;
+            margin-top: 1px;
+            flex-shrink: 0;
+        }
+
+        .b-link {
+            background: var(--s3);
+            border: 1px solid var(--b1);
+            color: var(--ts);
+            border-radius: 4px;
+            padding: 0.1rem 0.45rem;
+            font-size: 0.68rem;
+            display: inline-block;
+            margin: 0.12rem 0.15rem 0 0;
+            transition: all 0.14s;
+        }
+
+        .b-link:hover {
+            border-color: var(--blue);
+            color: var(--blue);
+        }
+
+        /* buttons */
+        .btn-learn {
+            font-size: 0.73rem;
+            color: var(--ts);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.28rem;
+            transition: color 0.14s;
+        }
+
+        .btn-learn:hover {
+            color: var(--gold);
+        }
+
+        .btn-branch-sm {
+            background: transparent;
+            border: 1px solid var(--b1);
+            color: var(--tm);
+            border-radius: var(--rs);
+            padding: 0.2rem 0.6rem;
+            font-size: 0.7rem;
+            font-family: 'Outfit', sans-serif;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.28rem;
+            transition: all 0.15s;
+        }
+
+        .btn-branch-sm:hover {
+            border-color: var(--gold-muted);
+            color: var(--gold);
+        }
+
+        .btn-gb {
+            background: transparent;
+            border: 1px solid rgba(232, 184, 75, 0.28);
+            color: var(--gold-muted);
+            border-radius: var(--rs);
+            padding: 0.26rem 0.7rem;
+            font-size: 0.73rem;
+            font-family: 'Outfit', sans-serif;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.28rem;
+            transition: all 0.15s;
+        }
+
+        .btn-gb:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+            background: var(--gold-dim);
+        }
+
+        .leads-to {
+            font-size: 0.73rem;
+            color: var(--gold-muted);
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        /* spacer / end */
+        .tl-sp {
+            height: 1.1rem;
+            border-left: 1px solid var(--b1);
+            margin-left: 0.6rem;
+        }
+
+        @media (min-width: 640px) {
+            .tl-sp {
+                margin-left: 0.85rem;
+            }
+        }
+
+        .tl-end {
+            margin-left: 0.6rem;
+            padding: 1.1rem 0 1.5rem 1.4rem;
+            border-left: 1px dashed var(--b1);
+        }
+
+        @media (min-width: 640px) {
+            .tl-end {
+                margin-left: 0.85rem;
+                padding-left: 1.8rem;
+            }
+        }
+
+        .btn-add {
+            background: transparent;
+            border: 1px dashed var(--b2);
+            color: var(--ts);
+            border-radius: var(--rs);
+            padding: 0.35rem 0.8rem;
+            font-size: 0.75rem;
+            font-family: 'Outfit', sans-serif;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.28rem;
+            transition: all 0.15s;
+        }
+
+        .btn-add:hover {
+            border-style: solid;
+            border-color: var(--gold-muted);
+            color: var(--gold);
+        }
+
+        .btn-mrg {
+            background: transparent;
+            border: 1px solid rgba(232, 184, 75, 0.28);
+            color: var(--gold-muted);
+            border-radius: var(--rs);
+            padding: 0.35rem 0.8rem;
+            font-size: 0.75rem;
+            font-family: 'Outfit', sans-serif;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.28rem;
+            transition: all 0.15s;
+        }
+
+        .btn-mrg:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+
+        .end-marker {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.38rem;
+            background: var(--s2);
+            border: 1px solid var(--b0);
+            border-radius: 20px;
+            padding: 0.28rem 0.85rem;
+            font-size: 0.7rem;
+            color: var(--tm);
+        }
+
+        /* ══════════════════════════════════════════
+           ADD EVENT BUTTON (inline per card)
+        ══════════════════════════════════════════ */
+        .btn-add-event-inline {
+            background: transparent;
+            border: 1px dashed var(--b2);
+            color: var(--tm);
+            border-radius: var(--rs);
+            padding: 0.22rem 0.65rem;
+            font-size: 0.7rem;
+            font-family: 'Outfit', sans-serif;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.28rem;
+            transition: all 0.18s;
+            flex-shrink: 0;
+        }
+
+        .btn-add-event-inline:hover {
+            border-style: solid;
+            border-color: var(--green);
+            color: var(--green);
+            background: rgba(77, 184, 126, 0.06);
+        }
+
+        .btn-add-event-inline.active {
+            border-style: solid;
+            border-color: var(--green);
+            color: var(--green);
+            background: rgba(77, 184, 126, 0.08);
+        }
+
+        /* ══════════════════════════════════════════
+           INLINE ADD EVENT FORM
+        ══════════════════════════════════════════ */
+        .add-event-form-wrap {
+            /* slide-down animation */
+            overflow: hidden;
+            max-height: 0;
+            opacity: 0;
+            transition: max-height 0.38s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.28s ease;
+            margin-bottom: 0;
+        }
+
+        .add-event-form-wrap.open {
+            max-height: 900px;
+            opacity: 1;
+            margin-bottom: 0.9rem;
+        }
+
+        .add-event-form {
+            background: var(--s2);
+            border: 1px solid var(--green);
+            border-radius: var(--r);
+            overflow: hidden;
+            box-shadow: 0 0 0 3px rgba(77, 184, 126, 0.07), 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        /* form header */
+        .aef-header {
+            background: rgba(77, 184, 126, 0.07);
+            border-bottom: 1px solid rgba(77, 184, 126, 0.18);
+            padding: 0.7rem 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+        }
+
+        .aef-header-left {
+            display: flex;
+            align-items: center;
+            gap: 0.55rem;
+        }
+
+        .aef-header-icon {
+            width: 26px;
+            height: 26px;
+            border-radius: 6px;
+            background: rgba(77, 184, 126, 0.15);
+            border: 1px solid rgba(77, 184, 126, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--green);
+            font-size: 0.78rem;
+        }
+
+        .aef-header-title {
+            font-family: 'Fraunces', serif;
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--tp);
+        }
+
+        .aef-header-sub {
+            font-size: 0.68rem;
+            color: var(--ts);
+        }
+
+        .aef-prev-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.28rem;
+            background: rgba(77, 184, 126, 0.1);
+            border: 1px solid rgba(77, 184, 126, 0.22);
+            color: var(--green);
+            border-radius: 20px;
+            padding: 0.15rem 0.6rem;
+            font-size: 0.68rem;
+            font-weight: 600;
+        }
+
+        .aef-close {
+            background: transparent;
+            border: none;
+            color: var(--ts);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border-radius: var(--rs);
+            transition: all 0.15s;
+            flex-shrink: 0;
+        }
+
+        .aef-close:hover {
+            background: rgba(224, 92, 92, 0.1);
+            color: var(--red);
+        }
+
+        /* form body */
+        .aef-body {
+            padding: 1.1rem;
+        }
+
+        .aef-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.75rem;
+        }
+
+        @media (min-width: 540px) {
+            .aef-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .aef-full {
+                grid-column: 1 / -1;
+            }
+        }
+
+        /* form fields */
+        .f-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .f-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--ts);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            display: flex;
+            align-items: center;
+            gap: 0.28rem;
+        }
+
+        .f-label i {
+            font-size: 0.65rem;
+            color: var(--tm);
+        }
+
+        .f-label .req {
+            color: var(--green);
+            font-size: 0.65rem;
+        }
+
+        .f-input,
+        .f-textarea,
+        .f-select-f {
+            background: var(--s3);
+            border: 1px solid var(--b1);
+            color: var(--tp);
+            border-radius: var(--rs);
+            padding: 0.55rem 0.75rem;
+            font-size: 0.83rem;
+            font-family: 'Outfit', sans-serif;
+            transition: border-color 0.18s, box-shadow 0.18s;
+            width: 100%;
+        }
+
+        .f-input:focus,
+        .f-textarea:focus,
+        .f-select-f:focus {
+            outline: none;
+            border-color: var(--green);
+            box-shadow: 0 0 0 3px rgba(77, 184, 126, 0.1);
+        }
+
+        .f-input::placeholder,
+        .f-textarea::placeholder {
+            color: var(--tm);
+        }
+
+        .f-textarea {
+            resize: vertical;
+            min-height: 80px;
+            line-height: 1.6;
+        }
+
+        .f-select-f {
+            cursor: pointer;
+            appearance: auto;
+        }
+
+        .f-select-f option {
+            background: var(--s3);
+        }
+
+        /* hidden prev_event field display */
+        .f-prev-display {
+            background: var(--s3);
+            border: 1px solid rgba(77, 184, 126, 0.25);
+            border-radius: var(--rs);
+            padding: 0.5rem 0.75rem;
+            font-size: 0.82rem;
+            color: var(--green);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+        }
+
+        .f-prev-display i {
+            color: var(--green);
+            font-size: 0.78rem;
+            flex-shrink: 0;
+        }
+
+        .f-prev-display span {
+            color: var(--ts);
+            font-size: 0.72rem;
+            margin-left: auto;
+        }
+
+        /* form footer */
+        .aef-footer {
+            padding: 0.8rem 1.1rem;
+            border-top: 1px solid var(--b0);
+            background: var(--s3);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .aef-hint {
+            font-size: 0.68rem;
+            color: var(--tm);
+            display: flex;
+            align-items: center;
+            gap: 0.28rem;
+        }
+
+        .aef-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-cancel {
+            background: transparent;
+            border: 1px solid var(--b1);
+            color: var(--ts);
+            border-radius: var(--rs);
+            padding: 0.38rem 0.9rem;
+            font-size: 0.78rem;
+            font-family: 'Outfit', sans-serif;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .btn-cancel:hover {
+            border-color: var(--b2);
+            color: var(--tp);
+        }
+
+        .btn-submit {
+            background: var(--green);
+            border: none;
+            color: #000;
+            border-radius: var(--rs);
+            padding: 0.38rem 1.1rem;
+            font-size: 0.78rem;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            transition: background 0.15s, transform 0.1s;
+        }
+
+        .btn-submit:hover {
+            background: #5dcf91;
+        }
+
+        .btn-submit:active {
+            transform: scale(0.97);
+        }
+
+        .btn-submit i {
+            font-size: 0.75rem;
+        }
+
+        /* connecting arrow from card to form */
+        .form-connector {
+            display: flex;
+            align-items: center;
+            padding: 0 0 0.2rem 0.5rem;
+            gap: 0.4rem;
+            margin-bottom: 0.15rem;
+        }
+
+        .form-connector-line {
+            width: 1px;
+            height: 1.1rem;
+            background: linear-gradient(to bottom, var(--b1), var(--green));
+            margin-left: 0.55rem;
+        }
+
+        .form-connector-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--green);
+            flex-shrink: 0;
+            box-shadow: 0 0 6px rgba(77, 184, 126, 0.5);
+        }
+
+        .form-connector-label {
+            font-size: 0.63rem;
+            color: var(--green);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            font-weight: 600;
+        }
+
+        @keyframes fu {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAV -->
+    <nav class="app-nav">
+        <div class="nav-inner">
+            <a href="/" class="brand"><i class="bi bi-diagram-2-fill"></i>Branchable</a>
+            <span class="nav-chip">{{chronology.title}} · {{chronology.start_date}}–{{chronology.end_date}}</span>
+            <div class="nav-actions">
+                <button class="btn-g" onclick="showTimeline()"><i class="bi bi-list-ul"></i><span
+                        class="lbl">Timeline</span></button>
+                <button class="btn-g"><i class="bi bi-git"></i><span class="lbl">Branch</span></button>
+                <button class="btn-gold-s"><i class="bi bi-person-circle"></i><span class="lbl">Sign In</span></button>
+            </div>
+        </div>
+    </nav>
+
+    <div id="view-timeline">
+
+        <!-- HERO -->
+        <div class="hero">
+            <div class="bc-row">
+                <a href="index.html">All Chronologies</a>
+                <i class="bi bi-chevron-right"></i>
+                <span class="active">{{chronology.title}}</span>
+            </div>
+            <h2 class="hero-title">{{chronology.title}}<span class="branch-pill">{{ branch.name }}</span></h2>
+            <p class="hero-desc">{{chronology.description}}</p>
+            <div class="hero-stats">
+                <span class="stat-chip"><i class="bi bi-node-plus"
+                        style="color:var(--green)"></i>{{branch.events.count}} Events</span>
+                <span class="stat-chip"><i class="bi bi-diagram-3"
+                        style="color:var(--blue)"></i>{{chronology.branches.count}} Branches</span>
+                <span class="stat-chip"><i class="bi bi-people" style="color:var(--gold)"></i>_ Contributors</span>
+            </div>
+        </div>
+
+        <!-- BRANCH BAR -->
+        <div class="branch-bar">
+            <span class="bb-label">Branch:</span>
+            {% for b in chronology.branches.all %}
+            <button class="bb-tab {% if b.name == branch.name %}active{% endif %}"><i
+                    class="bi bi-circle-fill"></i>{{b.name}}</button>
+            {% endfor %}
+        </div>
+
+        <!-- CONTENT -->
+        <div class="tl-outer">
+            <div class="filter-row">
+                <div class="search-box">
+                    <i class="bi bi-search"></i>
+                    <input type="text" class="search-input" placeholder="Search events…">
+                </div>
+                <select class="f-select">
+                    <option>All Actors</option>
+                    <option>Mohamed Bouazizi</option>
+                    <option>Hosni Mubarak</option>
+                    <option>NATO</option>
+                </select>
+                <select class="f-select">
+                    <option>All Countries</option>
+                    <option>Tunisia</option>
+                    <option>Egypt</option>
+                    <option>Libya</option>
+                    <option>Syria</option>
+                </select>
+                <button class="btn-g"><i class="bi bi-sliders"></i><span class="lbl">Filter</span></button>
+            </div>
+
+            {% if branch.initial_event %}
+            <!-- GENESIS -->
+            <div class="origin-row">
+                <div class="origin-badge"><i class="bi bi-star-fill" style="font-size:0.58rem"></i>Origin</div>
+                <div class="origin-line"></div>
+                <span class="origin-lbl">Genesis Event</span>
+            </div>
+            <div class="tl-track" style="margin-bottom:0">
+                <div class="dot-genesis"></div>
+                <a href="/events/{{branch.initial_event.slug}}">
+                    <div class="gc">
+                        <div class="gc-body">
+                            <div class="d-flex flex-wrap gap-1 align-items-center mb-2">
+                                <span class="tag tg"><i class="bi bi-star-fill"></i>Genesis</span>
+                                {% if branch.initial_event.country %}<span
+                                    class="tag tc">{{branch.initial_event.country}}</span>{% endif %}
+                                {% if branch.initial_event.category %}<span
+                                    class="tag tk">{{branch.initial_event.category}}</span>{% endif %}
+                                <span class="ms-auto" style="font-size:0.7rem;color:var(--tm)"><i
+                                        class="bi bi-calendar3 me-1"></i>{{branch.initial_event.date}}</span>
+                            </div>
+                            <div class="gc-title">{{branch.initial_event.title}}</div>
+                            <p style="font-size:0.83rem;color:var(--ts);line-height:1.65;margin-bottom:0.7rem">
+                                {{branch.initial_event.summary}}</p>
+                            <div class="d-flex flex-wrap gap-1 align-items-center">
+                                {% if branch.initial_event.actor %}<span class="tag td"><i
+                                        class="bi bi-person-fill"></i>{{branch.initial_event.actor}}</span>{% endif %}
+                                {% if branch.initial_event.location %}<span class="tag td"><i
+                                        class="bi bi-geo-alt-fill"></i>
+                                    {{branch.initial_event.location}}</span>
+                                {% endif %}
+                                <div class="ms-auto d-flex gap-1">
+                                    {% if branch.initial_event.accuracy %}<span class="tag ta"><i
+                                            class="bi bi-shield-fill-check"></i>
+                                        {{branch.initial_event.accuracy}}%</span>
+                                    {% endif %}
+                                    {% if branch.initial_event.comments_count %}<span class="tag td"><i
+                                            class="bi bi-chat-fill"></i>
+                                        {{branch.initial_event.comments_count}}</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="gc-footer">
+                            <span class="leads-to"><i class="bi bi-arrow-right-circle-fill"></i>Leads to:
+                                {{branch.initial_event.leads_to}}</span>
+                            <button class="btn-gb" onclick="event.stopPropagation()"><i class="bi bi-git"></i>Branch
+                                from here</button>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="tl-sp"></div>
+            {% endif %}
+
+            {% for year, events in grouped_events.items %}
+            <div class="year-row"><span class="year-badge">{{ year }}</span>
+                <div class="year-line"></div>
+            </div>
+
+            {% for event in events %}
+            <div id="event-{{event.slug}}" class="tl-track" style="margin-bottom:0">
+                <div class="dot"></div>
+
+                <!-- EVENT CARD -->
+                <div class="ev-card">
+                    <div class="ev-body">
+                        <div class="d-flex flex-wrap gap-1 align-items-center mb-2">
+                            <span class="tag tc">Tunisia</span>
+                            <span class="tag tk">Catalyst</span>
+                            <span style="font-size:0.7rem;color:var(--tm)"><i class="bi bi-calendar3 me-1"></i>December
+                                17, 2010</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-start gap-2">
+                            <div class="flex-grow-1">
+                                <div class="ev-title">{{event.title}}</div>
+                                <p class="ev-sum">{{event.summary}}</p>
+                                <div class="d-flex flex-wrap gap-1">
+                                    <span class="tag td"><i class="bi bi-person-fill"></i>{{event.actor}}</span>
+                                    <span class="tag td"><i class="bi bi-geo-alt-fill"></i>{{event.location}}</span>
+                                </div>
+                            </div>
+                            <div class="d-flex flex-column gap-1 align-items-end flex-shrink-0">
+                                <span class="tag ta"><i class="bi bi-shield-fill-check"></i>94%</span>
+                                <span class="tag td"><i class="bi bi-chat-fill"></i>12</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ev-footer">
+                        <a href="/events/{{event.slug}}" class="btn-learn">View detail <i
+                                class="bi bi-arrow-right-circle-fill" style="color:var(--gold)"></i></a>
+                        <div class="d-flex gap-2 align-items-center flex-wrap">
+                            <button class="btn-branch-sm" onclick="event.stopPropagation()"><i
+                                    class="bi bi-git"></i>Branch from here</button>
+                            <!-- ★ ADD EVENT AFTER THIS EVENT ★ -->
+                            <button class="btn-add-event-inline"
+                                onclick="event.stopPropagation(); toggleAddForm('form-after-{{event.slug}}', this, '{{event.slug}}', '{{event.title}}')"
+                                title="Add event after this one">
+                                <i class="bi bi-plus-circle"></i>Add next event
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                {% if event.branches.count > 0 %}
+                <div style="padding-left:1rem;margin-bottom:0.85rem">
+                    <div class="ba">
+                        <i class="bi bi-diagram-3-fill"></i>
+                        <div>
+                            <span style="color:var(--blue);font-weight:600">{{event.branches.count}} branches</span>
+                            <span style="color:var(--ts)"> diverge from this event</span>
+                            <div class="mt-1">{% for branch in event.branches.all %}<a
+                                    href="/chronology/{{chronology.slug}}/?branch_id={{branch.uuid}}"
+                                    class="b-link">{{branch}}</a>{% endfor %}</div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- ★ INLINE ADD EVENT FORM (hidden by default) ★ -->
+                <div class="add-event-form-wrap" id="form-after-{{event.slug}}">
+                    <!-- visual connector -->
+                    <div class="form-connector-line"></div>
+                    <div class="add-event-form">
+                        <div class="aef-header">
+                            <div class="aef-header-left">
+                                <div class="aef-header-icon"><i class="bi bi-plus-lg"></i></div>
+                                <div>
+                                    <div class="aef-header-title">New Event</div>
+                                    <div class="aef-header-sub">Follows after <span class="aef-prev-pill"><i
+                                                class="bi bi-link-45deg"></i><span class="prev-label"></span></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="aef-close" onclick="closeForm('form-after-{{event.slug}}', this)"
+                                title="Close">
+                                <i class="bi bi-x-lg" style="font-size:0.8rem"></i>
+                            </button>
+                        </div>
+
+                        <form method="POST" action="/events/create/" class="aef-body">
+                            {% csrf_token %}
+
+                            <!-- Hidden: prev_event auto-filled by JS -->
+                            <input type="hidden" name="prev_event" class="prev-event-input" value="{{event.slug}}">
+                            <!-- Hidden: branch auto-filled -->
+                            <input type="hidden" name="branch" value="{{branch.uuid}}">
+
+                            <div class="aef-grid">
+
+                                <!-- Title -->
+                                <div class="f-group aef-full">
+                                    <label class="f-label"><i class="bi bi-type"></i>Title <span
+                                            class="req">*</span></label>
+                                    <input type="text" name="title" class="f-input"
+                                        placeholder="e.g. Protests spread to Alexandria" required autocomplete="off">
+                                </div>
+
+                                <!-- Date label -->
+                                <div class="f-group">
+                                    <label class="f-label"><i class="bi bi-calendar3"></i>Date <span
+                                            class="req">*</span></label>
+                                    <input type="datetime-local" name="date_label" class="f-input" required>
+                                </div>
+
+                                <!-- Time label (year group) -->
+                                <div class="f-group">
+                                    <label class="f-label"><i class="bi bi-clock-history"></i>Year Group Label</label>
+                                    <input type="text" name="time_label" class="f-input" placeholder="e.g. 2011"
+                                        autocomplete="off">
+                                </div>
+
+                                <!-- Location -->
+                                <div class="f-group">
+                                    <label class="f-label"><i class="bi bi-geo-alt-fill"></i>Location</label>
+                                    <input type="text" name="location" class="f-input" placeholder="e.g. Cairo, Egypt"
+                                        autocomplete="off">
+                                </div>
+
+                                <!-- Previous event (read-only display) -->
+                                <div class="f-group">
+                                    <label class="f-label"><i class="bi bi-link-45deg"></i>Previous Event</label>
+                                    <div class="f-prev-display">
+                                        <i class="bi bi-check-circle-fill"></i>
+                                        <span class="prev-display-title"
+                                            style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></span>
+                                        <span>Auto-linked</span>
+                                    </div>
+                                </div>
+
+                                <!-- Summary -->
+                                <div class="f-group aef-full">
+                                    <label class="f-label"><i class="bi bi-text-left"></i>Summary <span
+                                            class="req">*</span></label>
+                                    <textarea name="summary" class="f-textarea"
+                                        placeholder="Brief description of what happened and why it matters…" rows="3"
+                                        required></textarea>
+                                </div>
+
+                                <!-- Content -->
+                                <div class="f-group aef-full">
+                                    <label class="f-label"><i class="bi bi-file-richtext"></i>Full Content</label>
+                                    <textarea name="content" class="f-textarea"
+                                        placeholder="Detailed account of the event. Supports rich text markup…"
+                                        rows="4"></textarea>
+                                </div>
+
+                            </div>
+
+                            <div class="aef-footer">
+                                <span class="aef-hint"><i class="bi bi-info-circle"></i>This event will be linked after
+                                    "{{event.title}}"</span>
+                                <div class="aef-actions">
+                                    <button type="button" class="btn-cancel"
+                                        onclick="closeForm('form-after-{{event.slug}}', this)">Cancel</button>
+                                    <button type="submit" class="btn-submit"><i class="bi bi-check-lg"></i>Create
+                                        Event</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div><!-- /tl-track -->
+            {% endfor %}
+            {% endfor %}
+
+            <!-- ─── TIMELINE END ─── -->
+            <div class="tl-end">
+                <div class="d-flex gap-2 mb-3 flex-wrap align-items-center">
+                    <!-- ★ ADD EVENT AT END (no prev_event) ★ -->
+                    <button class="btn-add"
+                        onclick="toggleAddForm('form-after-end', this, '', 'none — this will be the last event')">
+                        <i class="bi bi-plus-circle"></i>Add Event
+                    </button>
+                    <button class="btn-mrg"><i class="bi bi-git"></i>Request Merge</button>
+                </div>
+
+                <!-- Inline form at the end of timeline -->
+                <div class="add-event-form-wrap" id="form-after-end">
+                    <div class="form-connector-line"></div>
+                    <div class="add-event-form">
+                        <div class="aef-header">
+                            <div class="aef-header-left">
+                                <div class="aef-header-icon"><i class="bi bi-plus-lg"></i></div>
+                                <div>
+                                    <div class="aef-header-title">New Event</div>
+                                    <div class="aef-header-sub">Appended to the end of this timeline</div>
+                                </div>
+                            </div>
+                            <button class="aef-close" onclick="closeForm('form-after-end', this)" title="Close">
+                                <i class="bi bi-x-lg" style="font-size:0.8rem"></i>
+                            </button>
+                        </div>
+
+                        <form method="POST" action="/events/create/" class="aef-body">
+                            {% csrf_token %}
+                            <!-- No prev_event for end-of-timeline -->
+                            <input type="hidden" name="prev_event" value="">
+                            <input type="hidden" name="branch" value="{{branch.uuid}}">
+
+                            <div class="aef-grid">
+
+                                <div class="f-group aef-full">
+                                    <label class="f-label"><i class="bi bi-type"></i>Title <span
+                                            class="req">*</span></label>
+                                    <input type="text" name="title" class="f-input"
+                                        placeholder="e.g. Peace agreement signed" required autocomplete="off">
+                                </div>
+
+                                <div class="f-group">
+                                    <label class="f-label"><i class="bi bi-calendar3"></i>Date <span
+                                            class="req">*</span></label>
+                                    <input type="datetime-local" name="date_label" class="f-input" required>
+                                </div>
+
+                                <div class="f-group">
+                                    <label class="f-label"><i class="bi bi-clock-history"></i>Year Group Label</label>
+                                    <input type="text" name="time_label" class="f-input" placeholder="e.g. 2015"
+                                        autocomplete="off">
+                                </div>
+
+                                <div class="f-group aef-full">
+                                    <label class="f-label"><i class="bi bi-geo-alt-fill"></i>Location</label>
+                                    <input type="text" name="location" class="f-input" placeholder="e.g. Tunis, Tunisia"
+                                        autocomplete="off">
+                                </div>
+
+                                <div class="f-group aef-full">
+                                    <label class="f-label"><i class="bi bi-text-left"></i>Summary <span
+                                            class="req">*</span></label>
+                                    <textarea name="summary" class="f-textarea"
+                                        placeholder="Brief description of what happened…" rows="3" required></textarea>
+                                </div>
+
+                                <div class="f-group aef-full">
+                                    <label class="f-label"><i class="bi bi-file-richtext"></i>Full Content</label>
+                                    <textarea name="content" class="f-textarea"
+                                        placeholder="Detailed account of the event…" rows="4"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="aef-footer">
+                                <span class="aef-hint"><i class="bi bi-info-circle"></i>This event will be added at the
+                                    end of the timeline</span>
+                                <div class="aef-actions">
+                                    <button type="button" class="btn-cancel"
+                                        onclick="closeForm('form-after-end', this)">Cancel</button>
+                                    <button type="submit" class="btn-submit"><i class="bi bi-check-lg"></i>Create
+                                        Event</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <span class="end-marker"><i class="bi bi-record-circle"></i>End of Timeline · 2015</span>
+            </div>
+
+        </div><!-- /tl-outer -->
+    </div><!-- /view-timeline -->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Track currently open form so we can close the previous one
+        let activeFormId = null;
+        let activeBtn = null;
+
+        /**
+         * Toggle the inline add-event form.
+         *
+         * @param {string} formId   - ID of the .add-event-form-wrap element
+         * @param {HTMLElement} btn - The button that was clicked
+         * @param {string} prevSlug - slug of the preceding event (empty for end-of-timeline)
+         * @param {string} prevTitle - title of the preceding event
+         */
+        function toggleAddForm(formId, btn, prevSlug, prevTitle) {
+            const wrap = document.getElementById(formId);
+            const isOpen = wrap.classList.contains('open');
+
+            // Close any already-open form first
+            if (activeFormId && activeFormId !== formId) {
+                const prev = document.getElementById(activeFormId);
+                if (prev) prev.classList.remove('open');
+                if (activeBtn) {
+                    activeBtn.classList.remove('active');
+                    activeBtn.innerHTML = '<i class="bi bi-plus-circle"></i>Add next event';
+                }
+            }
+
+            if (isOpen) {
+                // Toggle off
+                wrap.classList.remove('open');
+                btn.classList.remove('active');
+                if (formId !== 'form-after-end') {
+                    btn.innerHTML = '<i class="bi bi-plus-circle"></i>Add next event';
+                } else {
+                    btn.innerHTML = '<i class="bi bi-plus-circle"></i>Add Event';
+                }
+                activeFormId = null;
+                activeBtn = null;
+            } else {
+                // Open this form
+                wrap.classList.add('open');
+                btn.classList.add('active');
+                if (formId !== 'form-after-end') {
+                    btn.innerHTML = '<i class="bi bi-x-circle"></i>Cancel';
+                }
+
+                // Fill in prev_event details inside this form
+                const input = wrap.querySelector('.prev-event-input');
+                if (input) input.value = prevSlug;
+
+                const pill = wrap.querySelector('.prev-label');
+                if (pill) pill.textContent = prevTitle;
+
+                const display = wrap.querySelector('.prev-display-title');
+                if (display) display.textContent = prevTitle;
+
+                // Auto-focus title field
+                const titleInput = wrap.querySelector('input[name="title"]');
+                if (titleInput) {
+                    setTimeout(() => titleInput.focus(), 380); // wait for transition
+                }
+
+                // Smooth scroll so the form is in view
+                setTimeout(() => {
+                    wrap.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }, 100);
+
+                activeFormId = formId;
+                activeBtn = btn;
+            }
+        }
+
+        /**
+         * Close a specific form (called from close/cancel buttons inside the form).
+         */
+        function closeForm(formId, triggerEl) {
+            const wrap = document.getElementById(formId);
+            if (!wrap) return;
+            wrap.classList.remove('open');
+
+            // Find and reset the trigger button in the card footer
+            if (activeBtn && activeFormId === formId) {
+                activeBtn.classList.remove('active');
+                if (formId !== 'form-after-end') {
+                    activeBtn.innerHTML = '<i class="bi bi-plus-circle"></i>Add next event';
+                } else {
+                    activeBtn.innerHTML = '<i class="bi bi-plus-circle"></i>Add Event';
+                }
+            }
+            activeFormId = null;
+            activeBtn = null;
+        }
+
+        // Close open form when pressing Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && activeFormId) {
+                closeForm(activeFormId, null);
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,4 @@
+django
+django-nested-admin
+django-rest-framework
+django-jazzmin
